@@ -1,0 +1,60 @@
+#!@BINDIR@/bash
+# 
+# This file is part of Plan10. It is subject to the license terms in
+# the LICENSE file found in the top-level directory of this
+# distribution.
+# This file may not be copied, modified, propagated, or distributed
+# except according to the terms contained in the LICENSE file.
+
+sourcing(){
+	
+	local list
+	
+	for list in /tmp/plan10-install-tmp/install.conf /usr/lib/plan10/util.sh; do
+		if [[ -f "${list}" ]]; then
+			source "${list}"
+		else
+			out_error "Missing file : ${list}"
+			exit	
+		fi
+	done
+	
+	unset list
+}
+sourcing
+
+custo_once() {
+	local _tmp cmd
+	cmd="${1}"
+	_tmp="/tmp/plan10-install-tmp"
+	
+	if [[ ! -d $_tmp ]]; then
+		mkdir -p -m0755 $_tmp || die "Impossible to create $_tmp"
+	fi
+    if [[ ! -e $_tmp/customize.${cmd} ]]; then
+        "${cmd}" || die "Cannot execute $_"
+        touch $_tmp/customize.${cmd}
+    else
+		return
+	fi
+    unset _tmp
+}
+
+############################## only modifie this script after this line ############################
+
+config(){
+	out_action "Create tree boot"
+	66-tree -v3 -n boot
+
+	out_action "Enable boot service at tree boot"
+	66-enable -v3 -t boot boot
+	
+	out_action "Create tree root and enable it"
+	66-tree -v3 -cnE root
+	
+	out_action "Enable dhcpd, tty1 and tty2 service"
+	66-enable -v3 -t root dhcpcd tty@tty1 tty@tty2
+}
+custo_once config
+
+out_valid "Customization terminate"
