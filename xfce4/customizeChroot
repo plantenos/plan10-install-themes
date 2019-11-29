@@ -1,0 +1,95 @@
+#!@BINDIR@/bash
+# 
+# This file is part of Plan10. It is subject to the license terms in
+# the LICENSE file found in the top-level directory of this
+# distribution.
+# This file may not be copied, modified, propagated, or distributed
+# except according to the terms contained in the LICENSE file.
+
+sourcing(){
+	
+	local list
+	
+	for list in /tmp/plan10-install-tmp/install.conf /usr/lib/plan10/util.sh; do
+		if [[ -f "${list}" ]]; then
+			source "${list}"
+		else
+			out_error "Missing file : ${list}"
+			exit	
+		fi
+	done
+	
+	unset list
+}
+sourcing
+
+custo_once() {
+	local _tmp cmd
+	cmd="${1}"
+	_tmp="/tmp/plan10-install-tmp"
+	
+	if [[ ! -d $_tmp ]]; then
+		mkdir -p -m0755 $_tmp || die "Impossible to create $_tmp"
+	fi
+    if [[ ! -e $_tmp/customize.${cmd} ]]; then
+        "${cmd}" || die "Cannot execute $_"
+        touch $_tmp/customize.${cmd}
+    else
+		return
+	fi
+    unset _tmp
+}
+
+############################## only modifie this script after this line ############################
+
+
+create_log_user(){
+	out_action "add ${NEWUSER} at log group"
+	gpasswd -a "$NEWUSER" log
+}
+custo_once create_log_user 
+
+config_66(){
+	
+	out_action "Create tree boot"
+	66-tree -v3 -n boot
+
+	out_action "Enable boot service at tree boot"
+	66-enable -v3 -t boot boot
+
+	out_action "Create tree boot-user for ${NEWUSER} and enable it"
+	66-tree -v3 -En boot-user
+
+	out_action "Configure module boot-user@${NEWUSER} and enable it at boot-user tree"
+	66-mods.sh boot-user@${NEWUSER}
+	66-enable -t boot-user All-${NEWUSER}
+
+	out_action "Create tree root, enables and make it current"
+	66-tree -v3 -Ecn root
+
+	out_action "Enable tty1, tty2, dbus, networkmanager, wpa_supplicant and ntpd on tree root"
+	66-enable -v3 sddm tty@tty1 tty@tty2 dbus openntpd networkmanager wpa_supplicant
+		
+	out_action "Create tree graphics for ${NEWUSER}, enables and makes it current"
+	su "${NEWUSER}" -c "66-tree -v3 -Ecn graphics"
+	
+	out_action "Enable xdg-user-dirs, dbus-session@${NEWUSER} on tree graphics"
+	su "${NEWUSER}" -c "66-enable -v3 xdg-user-dirs dbus-session@${NEWUSER}"
+}
+custo_once config_66
+
+config_startx() {
+	
+	sed -i "s:^\${cmd}\ jwm:#\${cmd}\ jwm:" /home/"${NEWUSER}"/.xinitrc
+	sed -i "s:^#\${cmd}\ openbox-session:\${cmd}\ openbox-session:" /home/"${NEWUSER}"/.xinitrc
+}
+custo_once config_startx
+
+##      Configure pulseaudio
+
+config_pulse(){
+	echo "load-module module-device-manager" >> /etc/pulse/default.pa
+}
+custo_once config_pulse
+
+out_valid "Customization terminate"
