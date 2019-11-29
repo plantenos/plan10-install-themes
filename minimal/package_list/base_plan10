@@ -1,0 +1,46 @@
+### One application per line.
+### You can use # to comment a line.
+### Blank line are ignored.
+#####################################
+
+#---------
+## plan10
+#---------
+
+66
+applysys
+eudev
+execline
+git
+htop
+libgudev
+mc
+nano
+plan10-keyring
+plan10-zsh
+piolibs
+pionews
+p7zip
+s6
+s6-linux-utils
+s6-portable-utils
+s6-rc
+skalibs
+sudo
+testdisk
+unrar
+unzip
+vi
+zsh
+zsh-completions
+
+#-----------
+## services
+#-----------
+
+boot-66serv
+tty@-66serv
+dhcpcd-66serv
+dmraid-66serv
+wpa_supplicant-66serv
+# nfs-utils-66serv
