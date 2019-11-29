@@ -1,0 +1,47 @@
+### One application per line.
+### You can use # to comment a line.
+### Blank line are ignored.
+#####################################
+
+## Special case for applysys.
+## Need to be here to apply sysuser file,
+## at first installation.
+
+#--------------
+## system base
+#--------------
+
+applysys
+bash
+bzip2
+coreutils
+cryptsetup
+dhcpcd
+diffutils
+e2fsprogs
+filesystem
+gawk
+gcc-libs
+gettext
+inetutils
+iproute2
+iputils
+less
+licenses
+linux
+linux-firmware
+man-db
+man-pages
+musl
+pacman
+pciutils
+perl
+procps-ng
+psmisc
+shadow
+sysfsutils
+tar
+usbutils
+util-linux
+which
+xfsprogs
