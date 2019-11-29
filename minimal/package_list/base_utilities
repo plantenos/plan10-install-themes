@@ -1,0 +1,65 @@
+### One application per line.
+### You can use # to comment a line.
+### Blank line are ignored.
+#####################################
+
+
+#--------------
+## boot loader
+#--------------
+
+grub
+syslinux
+
+#--------------------
+## uefi boot manager
+#--------------------
+
+refind-efi
+
+#---------------------
+## partitioning tools
+#---------------------
+
+gptfdisk
+parted
+
+#------------------
+## console browser
+#------------------
+
+lynx
+
+#------------
+## utilities
+#------------
+
+btrfs-progs 
+crda
+dmraid
+dosfstools 
+# nfs-utils
+ntfs-3g
+perl-file-mimeinfo 
+python
+usb_modeswitch
+wget 
+wireless_tools 
+wgetpaste 
+wpa_supplicant
+
+#-------------------
+## plan10 utilities
+#-------------------
+
+plan10-install
+plan10-install-themes
+pacopts
+
+#-------------------
+## fonts
+#-------------------
+
+fontconfig  
+gsfonts 
+terminus-fonts
