@@ -1,0 +1,35 @@
+### One application per line.
+### You can use # to comment a line.
+### Blank line are ignored.
+#####################################
+
+#-------------
+## base-devel
+#-------------
+
+autoconf
+autogen
+automake
+binutils
+bison
+clang
+fakeroot
+file
+findutils
+flex
+gawk
+gcc
+gettext
+grep
+groff
+gzip
+libtool
+llvm
+m4
+make
+musl
+patch
+pkgconf
+sed
+texinfo
+xorriso
